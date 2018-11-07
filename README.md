@@ -15,7 +15,7 @@ A simple Magento 2 extension that uses the `sales_order_invoice_pay` and `sales_
 Result: stock is not decreased (reserved) for unpaid orders.
 
 ## Installation
-In vanilla Magento 2.2, the product stock is 'reserved' (substracted) when an order is placed, so we'll have to disable this system so we can replace it wit our own.
+In vanilla Magento 2.2, the product stock is 'reserved' (substracted) when an order is placed, so we'll have to disable this system so we can replace it with our own.
 
 1. Set 'Decrease Stock When Order is Placed' to 'No' to disable. You can find it here: Stores > Inventory > Stock Options
 
