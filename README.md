@@ -21,5 +21,5 @@ In vanilla Magento 2.2, the product stock is 'reserved' (substracted) when an or
 
 2. Install via composer:
 ```bash
-composer require vendic/magento2-invoiceqty
+comoser require vendic/magento2-stock-change-after-payment
 ```
