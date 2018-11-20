@@ -45,9 +45,13 @@ class InvoicePaid implements ObserverInterface
          */
         $invoice = $observer->getData('invoice');
 
-        foreach ($invoice->getItems() as $item) {
+        foreach ($invoice->getOrder()->getItems() as $item) {
 
-            $orderedQty = (float)$item->getQty();
+//            if($item->getParentId() !== null) {
+//                continue; // A configurable product is also added to the invoce, we need to skip this.
+//            }
+
+            $orderedQty = (float)$item->getQtyOrdered();
             $qtyMutation = (float)$orderedQty * -1;
             $id = (string)$item->getProductId();
             $sku = (string)$item->getSku();

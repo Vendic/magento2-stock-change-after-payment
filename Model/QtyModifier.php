@@ -22,11 +22,21 @@ class QtyModifier implements QtyModifierInterface
      * @var StockRegistryInterface
      */
     protected $stockRegistry;
+    /**
+     * @var \Magento\CatalogInventory\Api\StockStateInterface
+     */
+    protected $stockState;
 
     public function __construct(
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\CatalogInventory\Model\Stock\StockItemRepository $stockItemRepository,
+        \Magento\CatalogInventory\Api\StockStateInterface $stockState,
         StockRegistryInterface $stockRegistry,
         LoggerInterface $logger
     ) {
+        $this->productRepository = $productRepository;
+        $this->stockItemRepository = $stockItemRepository;
+        $this->stockState = $stockState;
         $this->logger = $logger;
         $this->stockRegistry = $stockRegistry;
     }
@@ -34,12 +44,18 @@ class QtyModifier implements QtyModifierInterface
     /**
      * @param  string $productId
      * @param  string $sku
-     * @param  float  $modifier
+     * @param  float $modifier
      * @return $this|void
      */
     public function modify(string $productId, string $sku, float $modifier)
     {
-        $stockItem = $this->stockRegistry->getStockItem($productId);
+        try {
+            $stockItem = $this->stockItemRepository->get($productId);
+        } catch (\Exception $e) {
+            return;
+        }
+
+        $stockItem = $this->stockRegistry->getStockItemBySku($sku);
         if (!$stockItem->getManageStock()) {
             return; // We're not managing stock for this product, skipping
         }
@@ -50,7 +66,7 @@ class QtyModifier implements QtyModifierInterface
 
         // Set stock status
         $stockItem->setIsInStock(true);
-        if($newQty <= 0) {
+        if ($newQty <= 0) {
             $stockItem->setIsInStock(false);
         }
 
