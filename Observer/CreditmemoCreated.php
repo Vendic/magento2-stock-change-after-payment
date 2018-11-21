@@ -44,7 +44,6 @@ class CreditmemoCreated implements ObserverInterface
         $creditMemo = $observer->getData('creditmemo');
 
         foreach ($creditMemo->getOrder()->getItems() as $item) {
-
             $orderedQty = (float)$item->getQtyOrdered();
             $qtyMutation = (float)$orderedQty * 1;
             $id = (string)$item->getProductId();

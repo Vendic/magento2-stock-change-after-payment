@@ -46,7 +46,6 @@ class InvoicePaid implements ObserverInterface
         $invoice = $observer->getData('invoice');
 
         foreach ($invoice->getOrder()->getItems() as $item) {
-
             $orderedQty = (float)$item->getQtyOrdered();
             $qtyMutation = (float)$orderedQty * -1;
             $id = (string)$item->getProductId();
