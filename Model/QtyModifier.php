@@ -11,6 +11,8 @@ namespace Vendic\StockChangeAfterPayment\Model;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Psr\Log\LoggerInterface;
 use Vendic\StockChangeAfterPayment\Api\QtyModifierInterface;
+use Magento\CatalogInventory\Model\Stock\StockItemRepository;
+use Magento\CatalogInventory\Api\StockStateInterface;
 
 class QtyModifier implements QtyModifierInterface
 {
@@ -23,20 +25,22 @@ class QtyModifier implements QtyModifierInterface
      */
     protected $stockRegistry;
     /**
-     * @var \Magento\CatalogInventory\Api\StockStateInterface
+     * @var StockItemRepository
      */
-    protected $stockState;
+    protected $stockItemRepository;
 
+    /**
+     * QtyModifier constructor.
+     * @param StockItemRepository $stockItemRepository
+     * @param StockRegistryInterface $stockRegistry
+     * @param LoggerInterface $logger
+     */
     public function __construct(
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        \Magento\CatalogInventory\Model\Stock\StockItemRepository $stockItemRepository,
-        \Magento\CatalogInventory\Api\StockStateInterface $stockState,
+        StockItemRepository $stockItemRepository,
         StockRegistryInterface $stockRegistry,
         LoggerInterface $logger
     ) {
-        $this->productRepository = $productRepository;
         $this->stockItemRepository = $stockItemRepository;
-        $this->stockState = $stockState;
         $this->logger = $logger;
         $this->stockRegistry = $stockRegistry;
     }
