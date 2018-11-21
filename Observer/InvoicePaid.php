@@ -45,9 +45,9 @@ class InvoicePaid implements ObserverInterface
          */
         $invoice = $observer->getData('invoice');
 
-        foreach ($invoice->getItems() as $item) {
-
-            $orderedQty = (float)$item->getQty();
+        foreach ($invoice->getOrder()->getAllVisibleItems() as $item) {
+            /** @var \Magento\Sales\Order\Item $item */
+            $orderedQty = (float)$item->getQtyInvoiced();
             $qtyMutation = (float)$orderedQty * -1;
             $id = (string)$item->getProductId();
             $sku = (string)$item->getSku();

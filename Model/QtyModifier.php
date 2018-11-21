@@ -11,6 +11,8 @@ namespace Vendic\StockChangeAfterPayment\Model;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Psr\Log\LoggerInterface;
 use Vendic\StockChangeAfterPayment\Api\QtyModifierInterface;
+use Magento\CatalogInventory\Model\Stock\StockItemRepository;
+use Magento\CatalogInventory\Api\StockStateInterface;
 
 class QtyModifier implements QtyModifierInterface
 {
@@ -23,6 +25,12 @@ class QtyModifier implements QtyModifierInterface
      */
     protected $stockRegistry;
 
+    /**
+     * QtyModifier constructor.
+     * @param StockItemRepository $stockItemRepository
+     * @param StockRegistryInterface $stockRegistry
+     * @param LoggerInterface $logger
+     */
     public function __construct(
         StockRegistryInterface $stockRegistry,
         LoggerInterface $logger
@@ -34,12 +42,12 @@ class QtyModifier implements QtyModifierInterface
     /**
      * @param  string $productId
      * @param  string $sku
-     * @param  float  $modifier
+     * @param  float $modifier
      * @return $this|void
      */
     public function modify(string $productId, string $sku, float $modifier)
     {
-        $stockItem = $this->stockRegistry->getStockItem($productId);
+        $stockItem = $this->stockRegistry->getStockItemBySku($sku);
         if (!$stockItem->getManageStock()) {
             return; // We're not managing stock for this product, skipping
         }
@@ -50,7 +58,7 @@ class QtyModifier implements QtyModifierInterface
 
         // Set stock status
         $stockItem->setIsInStock(true);
-        if($newQty <= 0) {
+        if ($newQty <= 0) {
             $stockItem->setIsInStock(false);
         }
 
