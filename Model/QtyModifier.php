@@ -24,10 +24,6 @@ class QtyModifier implements QtyModifierInterface
      * @var StockRegistryInterface
      */
     protected $stockRegistry;
-    /**
-     * @var StockItemRepository
-     */
-    protected $stockItemRepository;
 
     /**
      * QtyModifier constructor.
@@ -36,11 +32,9 @@ class QtyModifier implements QtyModifierInterface
      * @param LoggerInterface $logger
      */
     public function __construct(
-        StockItemRepository $stockItemRepository,
         StockRegistryInterface $stockRegistry,
         LoggerInterface $logger
     ) {
-        $this->stockItemRepository = $stockItemRepository;
         $this->logger = $logger;
         $this->stockRegistry = $stockRegistry;
     }
@@ -53,12 +47,6 @@ class QtyModifier implements QtyModifierInterface
      */
     public function modify(string $productId, string $sku, float $modifier)
     {
-        try {
-            $stockItem = $this->stockItemRepository->get($productId);
-        } catch (\Exception $e) {
-            return;
-        }
-
         $stockItem = $this->stockRegistry->getStockItemBySku($sku);
         if (!$stockItem->getManageStock()) {
             return; // We're not managing stock for this product, skipping

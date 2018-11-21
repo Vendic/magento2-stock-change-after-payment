@@ -43,8 +43,9 @@ class CreditmemoCreated implements ObserverInterface
          */
         $creditMemo = $observer->getData('creditmemo');
 
-        foreach ($creditMemo->getOrder()->getItems() as $item) {
-            $orderedQty = (float)$item->getQtyOrdered();
+        foreach ($creditMemo->getOrder()->getAllVisibleItems() as $item) {
+            /** @var \Magento\Sales\Order\Item $item */
+            $orderedQty = (float)$item->getQtyRefunded();
             $qtyMutation = (float)$orderedQty * 1;
             $id = (string)$item->getProductId();
             $sku = (string)$item->getSku();
